@@ -148,6 +148,15 @@ void clearInput()
 int main()
 {
     BudgetTracker tracker;
+
+    // Add sample data
+    cout << "=== Loading Sample Data ===" << endl;
+    tracker.addTransaction("Salary", 3000.00, "Income");
+    tracker.addTransaction("Groceries", -150.50, "Food");
+    tracker.addTransaction("Gas", -45.00, "Transport");
+    tracker.addTransaction("Freelance", 500.00, "Income");
+    tracker.addTransaction("Rent", -1200.00, "Housing");
+    
     int choice;
     while (true)
     {
