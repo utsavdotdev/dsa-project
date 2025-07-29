@@ -73,6 +73,70 @@ public:
 
         return node;
     }
+
+    // TODO: Loveless
+    // Binary Search by category
+    void searchByCategory(const string &category)
+    {
+    }
+
+    // TODO: Roshan
+    // Merge Sort by Amount (Recursive)
+    void displaySortedByAmount()
+    {
+    }
+
+    // Display using BST traversal (Recursion)
+    void displayByAmount()
+    {
+        cout << "\n=== All Transactions by Amount (BST Traversal) ===" << endl;
+        if (root == NULL)
+        {
+            cout << "No transactions found!" << endl;
+            return;
+        }
+        inorderTraversal(root);
+    }
+
+    void inorderTraversal(BSTNode *node)
+    {
+        if (node != NULL)
+        {
+            inorderTraversal(node->left);
+            node->transaction->display();
+            inorderTraversal(node->right);
+        }
+    }
+
+    // TODO: Rajesh
+    // Summary 
+    void showBudgetSummary() {}
+
+    // TODO: Rajesh
+    // Display all transactions
+    void displayAll()
+    {
+    }
+
+    // Destructor
+    ~BudgetTracker()
+    {
+        for (size_t i = 0; i < transactions.size(); i++)
+        {
+            delete transactions[i];
+        }
+        deleteBST(root);
+    }
+
+    void deleteBST(BSTNode *node)
+    {
+        if (node != NULL)
+        {
+            deleteBST(node->left);
+            deleteBST(node->right);
+            delete node;
+        }
+    }
 };
 
 void clearInput()
@@ -132,24 +196,28 @@ int main()
 
         case 2:
         {
-            // Search by Category
+            string category;
+            cout << "Enter category: ";
+            clearInput();
+            getline(cin, category);
+            tracker.searchByCategory(category);
             break;
         }
 
         case 3:
-            // Display by Amount
+            tracker.displayByAmount();
             break;
 
         case 4:
-            // Display Sorted by Amount
+            tracker.displaySortedByAmount();
             break;
 
         case 5:
-            // Display All Transactions
+            tracker.displayAll();
             break;
 
         case 6:
-            // Show Budget Summary
+            tracker.showBudgetSummary();
             break;
 
         case 7:
