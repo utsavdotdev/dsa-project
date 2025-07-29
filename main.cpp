@@ -45,7 +45,41 @@ private:
     int nextId;                         // Auto-increment ID
 public:
     BudgetTracker() : root(NULL), nextId(1) {}
+
+    // BST Operations with Recursion
+    void addTransaction(const string &desc, double amt, const string &cat)
+    {
+        Transaction *t = new Transaction(nextId++, desc, amt, cat);
+        transactions.push_back(t);
+        root = insertRecursive(root, t);
+        cout << "Transaction added with ID: " << t->id << endl;
+    }
+
+    BSTNode *insertRecursive(BSTNode *node, Transaction *t)
+    {
+        if (node == NULL)
+        {
+            return new BSTNode(t);
+        }
+
+        if (t->amount < node->transaction->amount)
+        {
+            node->left = insertRecursive(node->left, t);
+        }
+        else
+        {
+            node->right = insertRecursive(node->right, t);
+        }
+
+        return node;
+    }
 };
+
+void clearInput()
+{
+    cin.clear();
+    cin.ignore(10000, '\n');
+}
 
 int main()
 {
@@ -73,7 +107,26 @@ int main()
         {
         case 1:
         {
-            // Add Transaction
+            string desc, category;
+            double amount;
+
+            cout << "Description: ";
+            clearInput();
+            getline(cin, desc);
+
+            cout << "Amount (+ for income, - for expense): ";
+            if (!(cin >> amount))
+            {
+                cout << "Invalid amount!" << endl;
+                clearInput();
+                break;
+            }
+
+            cout << "Category: ";
+            clearInput();
+            getline(cin, category);
+
+            tracker.addTransaction(desc, amount, category);
             break;
         }
 
