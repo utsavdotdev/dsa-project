@@ -105,11 +105,76 @@ public:
         }
     }
 
-    // TODO: Roshan
     // Merge Sort by Amount (Recursive)
+      void merge(vector<Transaction *> &arr, int left, int mid, int right)
+    {
+        int n1 = mid - left + 1;
+        int n2 = right - mid;
+
+        vector<Transaction *> L(n1);
+        vector<Transaction *> R(n2);
+
+        for (int i = 0; i < n1; i++)
+            L[i] = arr[left + i];
+        for (int j = 0; j < n2; j++)
+            R[j] = arr[mid + 1 + j];
+
+        int i = 0, j = 0, k = left;
+        while (i < n1 && j < n2)
+        {
+            if (L[i]->amount <= R[j]->amount)
+            {
+                arr[k] = L[i];
+                i++;
+            }
+            else
+            {
+                arr[k] = R[j];
+                j++;
+            }
+            k++;
+        }
+        while (i < n1)
+        {
+            arr[k] = L[i];
+            i++;
+            k++;
+        }
+        while (j < n2)
+        {
+            arr[k] = R[j];
+            j++;
+            k++;
+        }
+    }
+    void mergeSort(vector<Transaction *> &arr, int left, int right)
+    {
+        if (left < right)
+        {
+            int mid = left + (right - left) / 2;
+            mergeSort(arr, left, mid);
+            mergeSort(arr, mid + 1, right);
+            merge(arr, left, mid, right);
+        }
+    }
     void displaySortedByAmount()
     {
+        if (transactions.empty())
+        {
+            cout << "No transactions." << endl;
+            return;
+        }
+
+        vector<Transaction *> temp = transactions; //create a copy of transactions for sorting
+        mergeSort(temp, 0, temp.size() - 1); //sort by amount
+
+        for (size_t i = 0; i < temp.size(); i++) {
+            Transaction* t = temp[i];
+            cout << "ID: " << t->id << " | " << t->description << " | $"
+                 << fixed << setprecision(2) << t->amount << " | " << t->category << endl;
+        }
     }
+
 
     // Display using BST traversal (Recursion)
     void displayByAmount()
