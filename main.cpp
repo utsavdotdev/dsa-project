@@ -6,7 +6,6 @@
 
 using namespace std;
 
-// Transaction class for data structure
 class Transaction
 {
 public:
@@ -20,12 +19,14 @@ public:
 
     void display() const
     {
-        cout << "ID: " << id << " | " << description << " | $"
-             << fixed << setprecision(2) << amount << " | " << category << endl;
+        cout << left << setw(5) << id
+             << left << setw(20) << description.substr(0, 18)
+             << right << setw(12) << fixed << setprecision(2) << amount
+             << "   " << left << setw(15) << category.substr(0, 13)
+             << endl;
     }
 };
 
-// BST Node for Binary Search Tree implementation
 class BSTNode
 {
 public:
@@ -36,7 +37,6 @@ public:
     BSTNode(Transaction *t) : transaction(t), left(NULL), right(NULL) {}
 };
 
-// Personal Budget Tracker System
 class BudgetTracker
 {
 private:
@@ -76,8 +76,7 @@ public:
 
     // TODO: Loveless
     // Binary Search by category
-    
-        void searchByCategory(const string &category)
+    void searchByCategory(const string &category)
     {
         cout << "\n=== Searching for Category: " << category << " ===" << endl;
 
@@ -105,7 +104,6 @@ public:
             searchCategoryInorder(node->right, category, found);
         }
     }
-
 
     // TODO: Roshan
     // Merge Sort by Amount (Recursive)
@@ -136,46 +134,67 @@ public:
     }
 
     void showBudgetSummary()
-{
-    double totalIncome = 0.0;
-    double totalExpense = 0.0;
-
-    for (size_t i = 0; i < transactions.size(); ++i)
     {
-        double amt = transactions[i]->amount;
-        if (amt >= 0)
-            totalIncome += amt;
-        else
-            totalExpense += amt;
+        double totalIncome = 0.0;
+        double totalExpense = 0.0;
+
+        for (int i = 0; i < transactions.size(); ++i)
+        {
+            double amt = transactions[i]->amount;
+            if (amt >= 0)
+                totalIncome += amt;
+            else
+                totalExpense += amt;
+        }
+
+        double net = totalIncome + totalExpense;
+
+        // Minimal color scheme
+        string green = "\033[32m";
+        string red = "\033[31m";
+        string gray = "\033[90m";
+        string reset = "\033[0m";
+
+        string status = (net >= 0) ? "Within Budget" : "Over Budget";
+        string statusColor = (net >= 0) ? green : red;
+
+        cout << "\n";
+        cout << gray << "  BUDGET SUMMARY" << reset << "\n\n";
+
+        cout << "  Income      " << "$" << fixed << setprecision(2) << totalIncome << "\n";
+        cout << "  Expenses    " << "$" << fixed << setprecision(2) << fabs(totalExpense) << "\n";
+        cout << gray << "  ────────────────────────" << reset << "\n";
+
+        cout << "  Balance     " << "$" << fixed << setprecision(2) << net << reset << "\n";
+        cout << "  Status      " << statusColor << status << reset << "\n\n";
     }
-
-    double net = totalIncome + totalExpense;
-
-    cout << "\n=== Budget Summary ===" << endl;
-    cout << "Total Income  : $" <<  totalIncome << endl;
-    cout << "Total Expense : $" <<  fabs(totalExpense) << endl;
-    cout << "Net Balance   : $" << net << endl;
-}
 
     void displayAll()
-{
-    cout << "\n=== All Transactions ===" << endl;
-    if (transactions.empty())
     {
-        cout << "No transactions recorded." << endl;
-        return;
-    }
+        if (transactions.empty())
+        {
+            cout << "No transactions recorded." << endl;
+            return;
+        }
 
-    for (size_t i = 0; i < transactions.size(); ++i)
-    {
-        transactions[i]->display();
+        // Print table header
+        cout << left << setw(5) << "ID"
+             << left << setw(20) << "Description"
+             << right << setw(12) << "Amount"
+             << "   " << left << setw(15) << "Category"
+             << endl;
+        cout << string(54, '-') << endl;
+
+        for (int i = 0; i < transactions.size(); ++i)
+        {
+            transactions[i]->display();
+        }
     }
-}
 
     // Destructor
     ~BudgetTracker()
     {
-        for (size_t i = 0; i < transactions.size(); i++)
+        for (int i = 0; i < transactions.size(); i++)
         {
             delete transactions[i];
         }
@@ -199,6 +218,15 @@ void clearInput()
     cin.ignore(10000, '\n');
 }
 
+void clearScreen()
+{
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
+}
+
 int main()
 {
     BudgetTracker tracker;
@@ -210,10 +238,12 @@ int main()
     tracker.addTransaction("Gas", -45.00, "Transport");
     tracker.addTransaction("Freelance", 500.00, "Income");
     tracker.addTransaction("Rent", -1200.00, "Housing");
-    
+    cout << "\nSample data loaded successfully!" << endl;
+
     int choice;
     while (true)
     {
+        clearScreen();
         cout << "\n=== Personal Budget Tracker ===" << endl;
         cout << "1. Add Transaction" << endl;
         cout << "2. Search by Category (BST)" << endl;
@@ -227,9 +257,11 @@ int main()
         if (!(cin >> choice))
         {
             cout << "Invalid input!" << endl;
+            clearInput();
             continue;
         }
 
+        clearScreen();
         switch (choice)
         {
         case 1:
@@ -237,6 +269,7 @@ int main()
             string desc, category;
             double amount;
 
+            cout << "=== Add New Transaction ===" << endl;
             cout << "Description: ";
             clearInput();
             getline(cin, desc);
@@ -254,28 +287,34 @@ int main()
             getline(cin, category);
 
             tracker.addTransaction(desc, amount, category);
+            cout << "\nTransaction added successfully!" << endl;
             break;
         }
 
         case 2:
         {
             string category;
+            cout << "=== Search by Category ===" << endl;
             cout << "Enter category: ";
             clearInput();
             getline(cin, category);
+
             tracker.searchByCategory(category);
             break;
         }
 
         case 3:
+            cout << "=== Display by Amount (BST Traversal) ===" << endl;
             tracker.displayByAmount();
             break;
 
         case 4:
+            cout << "=== Display Sorted by Amount (Merge Sort) ===" << endl;
             tracker.displaySortedByAmount();
             break;
 
         case 5:
+            cout << "=== All Transactions ===" << endl;
             tracker.displayAll();
             break;
 
@@ -284,11 +323,14 @@ int main()
             break;
 
         case 7:
-            cout << "Thank you!" << endl;
+            clearScreen();
+            cout << "=== Thank You for Using Budget Tracker! ===" << endl;
+            cout << "Goodbye!" << endl;
             return 0;
 
         default:
-            cout << "Invalid choice!" << endl;
+            cout << "Invalid choice! Please select 1-7." << endl;
+            break;
         }
     }
 
