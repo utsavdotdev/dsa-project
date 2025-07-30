@@ -76,9 +76,36 @@ public:
 
     // TODO: Loveless
     // Binary Search by category
-    void searchByCategory(const string &category)
+    
+        void searchByCategory(const string &category)
     {
+        cout << "\n=== Searching for Category: " << category << " ===" << endl;
+
+        bool found = false;
+        searchCategoryInorder(root, category, found);
+
+        if (!found)
+        {
+            cout << "No transactions found in category \"" << category << "\"." << endl;
+        }
     }
+
+    void searchCategoryInorder(BSTNode *node, const string &category, bool &found)
+    {
+        if (node != NULL)
+        {
+            searchCategoryInorder(node->left, category, found);
+
+            if (node->transaction->category == category)
+            {
+                node->transaction->display();
+                found = true;
+            }
+
+            searchCategoryInorder(node->right, category, found);
+        }
+    }
+
 
     // TODO: Roshan
     // Merge Sort by Amount (Recursive)
