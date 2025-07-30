@@ -164,7 +164,7 @@ public:
             cout << "No transactions." << endl;
             return;
         }
-
+        cout << "\n=== Display Sorted by Amount Only Income(Merge Sort) ===" << endl;
         vector<Transaction *> temp;
         for (Transaction *t : transactions)
         {
@@ -187,8 +187,30 @@ public:
             cout << "ID: " << t->id << " | " << t->description << " | $"
                  << fixed << setprecision(2) << t->amount << " | " << t->category << endl;
         }
-    }
+        cout << "\n=== Display Sorted by Amount Only Expense (Merge Sort) ===" << endl;
+        vector<Transaction *> temp1;
+        for (Transaction *t : transactions)
+        {
+            if (t->amount < 0)
+            {
+                temp1.push_back(t);
+            }
+        }
 
+        if (temp1.empty())
+        {
+            return;
+        }
+        mergeSort(temp1, 0, temp1.size() - 1);
+
+        // Display sorted amounts
+        for (size_t i = 0; i < temp1.size(); i++)
+        {
+            Transaction *t = temp1[i];
+            cout << "ID: " << t->id << " | " << t->description << " | $"
+                 << fixed << setprecision(2) << fabs(t->amount) << " | " << t->category << endl;
+        }
+    }
     // Display using BST traversal (Recursion)
     void displayByAmount()
     {
