@@ -135,15 +135,42 @@ public:
         }
     }
 
-    // TODO: Rajesh
-    // Summary 
-    void showBudgetSummary() {}
+    void showBudgetSummary()
+{
+    double totalIncome = 0.0;
+    double totalExpense = 0.0;
 
-    // TODO: Rajesh
-    // Display all transactions
-    void displayAll()
+    for (size_t i = 0; i < transactions.size(); ++i)
     {
+        double amt = transactions[i]->amount;
+        if (amt >= 0)
+            totalIncome += amt;
+        else
+            totalExpense += amt;
     }
+
+    double net = totalIncome + totalExpense;
+
+    cout << "\n=== Budget Summary ===" << endl;
+    cout << "Total Income  : $" <<  totalIncome << endl;
+    cout << "Total Expense : $" <<  fabs(totalExpense) << endl;
+    cout << "Net Balance   : $" << net << endl;
+}
+
+    void displayAll()
+{
+    cout << "\n=== All Transactions ===" << endl;
+    if (transactions.empty())
+    {
+        cout << "No transactions recorded." << endl;
+        return;
+    }
+
+    for (size_t i = 0; i < transactions.size(); ++i)
+    {
+        transactions[i]->display();
+    }
+}
 
     // Destructor
     ~BudgetTracker()
