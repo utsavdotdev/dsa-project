@@ -165,16 +165,29 @@ public:
             return;
         }
 
-        vector<Transaction *> temp = transactions; //create a copy of transactions for sorting
-        mergeSort(temp, 0, temp.size() - 1); //sort by amount
+        vector<Transaction *> temp;
+        for (Transaction *t : transactions)
+        {
+            if (t->amount >= 0)
+            {
+                temp.push_back(t);
+            }
+        }
 
-        for (size_t i = 0; i < temp.size(); i++) {
-            Transaction* t = temp[i];
+        if (temp.empty())
+        {
+            return;
+        }
+        mergeSort(temp, 0, temp.size() - 1);
+
+        // Display sorted amounts
+        for (size_t i = 0; i < temp.size(); i++)
+        {
+            Transaction *t = temp[i];
             cout << "ID: " << t->id << " | " << t->description << " | $"
                  << fixed << setprecision(2) << t->amount << " | " << t->category << endl;
         }
     }
-
 
     // Display using BST traversal (Recursion)
     void displayByAmount()
